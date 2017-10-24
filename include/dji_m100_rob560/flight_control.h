@@ -1,14 +1,3 @@
-/** @file demo_flight_control.h
- *  @version 3.3
- *  @date May, 2017
- *
- *  @brief
- *  demo sample of how to use flight control APIs
- *
- *  @copyright 2017 DJI. All rights reserved.
- *
- */
-
 #ifndef DEMO_FLIGHT_CONTROL_H
 #define DEMO_FLIGHT_CONTROL_H
 
@@ -22,7 +11,6 @@
 // DJI SDK includes
 #include <dji_sdk/DroneTaskControl.h>
 #include <dji_sdk/SDKControlAuthority.h>
-#include <dji_sdk/QueryDroneVersion.h>
 
 #include <tf/tf.h>
 #include <sensor_msgs/Joy.h>
@@ -34,8 +22,7 @@
 /*!
  * @brief a bare bone state machine to track the stage of the mission
  */
-class Mission
-{
+class Mission {
 public:
   // The basic state transition flow is:
   // 0---> 1 ---> 2 ---> ... ---> N ---> 0
@@ -63,16 +50,14 @@ public:
 
   void step();
 
-  void setTarget(float x, float y, float z, float yaw)
-  {
+  void setTarget(float x, float y, float z, float yaw) {
     target_offset_x = x;
     target_offset_y = y;
     target_offset_z = z;
     target_yaw      = yaw;
   }
 
-  void reset()
-  {
+  void reset() {
     inbound_counter = 0;
     outbound_counter = 0;
     break_counter = 0;
@@ -81,9 +66,7 @@ public:
 
 };
 
-void localOffsetFromGpsOffset(geometry_msgs::Vector3&  deltaNed,
-                         sensor_msgs::NavSatFix& target,
-                         sensor_msgs::NavSatFix& origin);
+void localOffsetFromGpsOffset(geometry_msgs::Vector3&  deltaNed, sensor_msgs::NavSatFix& target, sensor_msgs::NavSatFix& origin);
 
 geometry_msgs::Vector3 toEulerAngle(geometry_msgs::Quaternion quat);
 
@@ -98,10 +81,6 @@ void attitude_callback(const geometry_msgs::QuaternionStamped::ConstPtr& msg);
 bool takeoff_land(int task);
 
 bool obtain_control();
-
-bool is_M100();
-
-bool monitoredTakeoff();
 
 bool M100monitoredTakeoff();
 
