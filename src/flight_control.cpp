@@ -39,7 +39,6 @@ int main(int argc, char** argv) {
   // Basic services
   sdk_ctrl_authority_service = nh.serviceClient<dji_sdk::SDKControlAuthority>("dji_sdk/sdk_control_authority");
   drone_task_service         = nh.serviceClient<dji_sdk::DroneTaskControl>("dji_sdk/drone_task_control");
-  query_version_service      = nh.serviceClient<dji_sdk::QueryDroneVersion>("dji_sdk/query_drone_version");
 
   bool obtain_control_result = obtain_control();
   bool takeoff_result;
