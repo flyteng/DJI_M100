@@ -38,48 +38,15 @@ int main(int argc, char** argv) {
   ros::Subscriber acceleration    = nh.subscribe("dji_sdk/acceleration_ground_fused", 10, &acceleration_callback);
   ros::Subscriber trigger         = nh.subscribe("dji_sdk/trigger_time",              10, &trigger_callback);
   
-  print_data();
   ros::spin();
   return 0;
-}
-
-// Print data from FC in terminal
-void print_data() {
-  ROS_INFO("Roll: %.3f \t Pitch: %.3f \t Yaw: %.3f \t Throttle: %.3f \t Mode: %.3f \t Gear: %.3f",
-            rc_state.axes[0], rc_state.axes[1], rc_state.axes[2], rc_state.axes[3], rc_state.axes[4], rc_state.axes[5]);
-  ROS_INFO("q = [%.3f, %.3f, %.3f, %.3f]",
-            attitude_state.w, attitude_state.x, attitude_state.y, attitude_state.z);
-  ROS_INFO("Battery: %.3f",
-            battery_state.percentage);
-  ROS_INFO("IMU lin. acc. = [%.3f, %.3f, %.3f]",
-            imu_state.linear_acceleration.x, imu_state.linear_acceleration.y, imu_state.linear_acceleration.z);
-  ROS_INFO("IMU ang. vel. = [%.3f, %.3f, %.3f]",
-            imu_state.angular_velocity.x, imu_state.angular_velocity.y, imu_state.angular_velocity.z);
-  ROS_INFO("Flight status: %u",
-            flight_status_state);
-  ROS_INFO("GPS health: %u",
-            gps_health_state);
-  ROS_INFO("Latitude: %.3f \t Longitude: %.3f \t Altitude: %.3f",
-            gps_position_state.latitude, gps_position_state.longitude, gps_position_state.altitude);
-  ROS_INFO("Height: %.3f",
-            height_state.data);
-  ROS_INFO("Velocity = [%.3f, %.3f, %.3f]",
-            velocity_state.vector.x, velocity_state.vector.y, velocity_state.vector.z);
-  ROS_INFO("Local position = [%.3f, %.3f, %.3f]",
-            local_position_state.point.x, local_position_state.point.y, local_position_state.point.z);
-  ROS_INFO("Display mode: %u",
-            display_mode_state);
-  ROS_INFO("Ang. rate = [%.3f, %.3f, %.3f]",
-            angular_rate_state.vector.x, angular_rate_state.vector.y, angular_rate_state.vector.z);
-  ROS_INFO("Acceleration = [%.3f, %.3f, %.3f]",
-            acceleration_state.vector.x, acceleration_state.vector.y, acceleration_state.vector.z);
-  //ROS_INFO("Trigger: ",
-  //          trigger_state.time_ref);
 }
 
 // Callback functions
 void rc_callback(const sensor_msgs::Joy::ConstPtr& msg) {
   rc_state.axes = msg->axes;
+  ROS_INFO("Roll: %.3f \t Pitch: %.3f \t Yaw: %.3f \t Throttle: %.3f \t Mode: %.3f \t Gear: %.3f",
+            rc_state.axes[0], rc_state.axes[1], rc_state.axes[2], rc_state.axes[3], rc_state.axes[4], rc_state.axes[5]);
   
   /*  
       rc_joy.axes.push_back(static_cast<float>(vehicle->broadcast->getRC().roll     / 10000.0));
@@ -93,6 +60,8 @@ void rc_callback(const sensor_msgs::Joy::ConstPtr& msg) {
 
 void attitude_callback(const geometry_msgs::QuaternionStamped::ConstPtr& msg) {
   attitude_state = msg->quaternion;
+  ROS_INFO("q = [%.3f, %.3f, %.3f, %.3f]",
+            attitude_state.w, attitude_state.x, attitude_state.y, attitude_state.z);
 
   /*  
       Following REP 103 to use FLU for
@@ -108,6 +77,8 @@ void attitude_callback(const geometry_msgs::QuaternionStamped::ConstPtr& msg) {
 
 void battery_callback(const sensor_msgs::BatteryState::ConstPtr& msg) {
   battery_state = *msg;
+  ROS_INFO("Battery: %.3f",
+            battery_state.percentage);
 
   /*  
       msg_battery_state.percentage = vehicle->broadcast->getBatteryInfo().percentage;
@@ -117,6 +88,10 @@ void battery_callback(const sensor_msgs::BatteryState::ConstPtr& msg) {
 
 void imu_callback(const sensor_msgs::Imu::ConstPtr& msg) {
   imu_state = *msg;
+  ROS_INFO("IMU lin. acc. = [%.3f, %.3f, %.3f]",
+            imu_state.linear_acceleration.x, imu_state.linear_acceleration.y, imu_state.linear_acceleration.z);
+  ROS_INFO("IMU ang. vel. = [%.3f, %.3f, %.3f]",
+            imu_state.angular_velocity.x, imu_state.angular_velocity.y, imu_state.angular_velocity.z);
 
   /*
     imu.linear_acceleration.x =  vehicle->broadcast->getAcceleration().x * gravity_const;
@@ -136,14 +111,20 @@ void imu_callback(const sensor_msgs::Imu::ConstPtr& msg) {
 
 void flight_status_callback(const std_msgs::UInt8::ConstPtr& msg) {
   flight_status_state = msg->data;
+  ROS_INFO("Flight status: %u",
+            flight_status_state);
 }
 
 void gps_health_callback(const std_msgs::UInt8::ConstPtr& msg) {
   gps_health_state = msg->data;
+  ROS_INFO("GPS health: %u",
+            gps_health_state);
 }
 
 void gps_position_callback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
   gps_position_state = *msg;
+  ROS_INFO("Latitude: %.3f \t Longitude: %.3f \t Altitude: %.3f",
+            gps_position_state.latitude, gps_position_state.longitude, gps_position_state.altitude);
 
   /*
     gps_pos.latitude        = global_pos.latitude * 180 / C_PI;
@@ -154,6 +135,8 @@ void gps_position_callback(const sensor_msgs::NavSatFix::ConstPtr& msg) {
 
 void height_callback(const std_msgs::Float32::ConstPtr& msg) {
   height_state = *msg;
+  ROS_INFO("Height: %.3f",
+            height_state.data);
 
   /*
     msg.data = height
@@ -162,6 +145,8 @@ void height_callback(const std_msgs::Float32::ConstPtr& msg) {
 
 void velocity_callback(const geometry_msgs::Vector3Stamped::ConstPtr& msg) {
   velocity_state = *msg;
+  ROS_INFO("Velocity = [%.3f, %.3f, %.3f]",
+            velocity_state.vector.x, velocity_state.vector.y, velocity_state.vector.z);
 
   /*
     velocity.vector.x = vehicle->broadcast->getVelocity().y;
@@ -172,6 +157,8 @@ void velocity_callback(const geometry_msgs::Vector3Stamped::ConstPtr& msg) {
 
 void local_position_callback(const geometry_msgs::PointStamped::ConstPtr& msg) {
   local_position_state = *msg;
+  ROS_INFO("Local position = [%.3f, %.3f, %.3f]",
+            local_position_state.point.x, local_position_state.point.y, local_position_state.point.z);
 
   /*
     Following REP 103 to use ENU for short-range Cartesian representations.
@@ -185,10 +172,14 @@ void local_position_callback(const geometry_msgs::PointStamped::ConstPtr& msg) {
 
 void display_mode_callback(const std_msgs::UInt8::ConstPtr& msg) {
   display_mode_state = msg->data;
+  ROS_INFO("Display mode: %u",
+            display_mode_state);
 }
 
 void angular_rate_callback(const geometry_msgs::Vector3Stamped::ConstPtr& msg) {
   angular_rate_state = *msg;
+  ROS_INFO("Ang. rate = [%.3f, %.3f, %.3f]",
+            angular_rate_state.vector.x, angular_rate_state.vector.y, angular_rate_state.vector.z);
 
   /*
     Following REP 103 to use FLU for body frame
@@ -201,6 +192,8 @@ void angular_rate_callback(const geometry_msgs::Vector3Stamped::ConstPtr& msg) {
 
 void acceleration_callback(const geometry_msgs::Vector3Stamped::ConstPtr& msg) {
   acceleration_state = *msg;
+  ROS_INFO("Acceleration = [%.3f, %.3f, %.3f]",
+            acceleration_state.vector.x, acceleration_state.vector.y, acceleration_state.vector.z);
 
   /*
     Following REP 103 to use ENU for short-range Cartesian representations.
@@ -214,6 +207,8 @@ void acceleration_callback(const geometry_msgs::Vector3Stamped::ConstPtr& msg) {
 
 void trigger_callback(const sensor_msgs::TimeReference::ConstPtr& msg) {
   trigger_state = *msg;
+  //ROS_INFO("Trigger: ",
+  //          trigger_state.time_ref);
 
   /*
     trigTime.time_ref     = now_time;

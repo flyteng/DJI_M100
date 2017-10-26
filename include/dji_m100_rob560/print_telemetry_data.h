@@ -16,8 +16,6 @@
 #include <std_msgs/UInt8.h>
 #include <std_msgs/Float32.h>
 
-// Print data from FC to terminal
-void print_data();
 // Callback functions
 void rc_callback(const sensor_msgs::Joy::ConstPtr& msg);
 void attitude_callback(const geometry_msgs::QuaternionStamped::ConstPtr& msg);
