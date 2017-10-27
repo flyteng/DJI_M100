@@ -3,11 +3,11 @@
 
 // ROS
 #include <ros/ros.h>
-#include <tf/tf.h>
 
 // ROS standard messages
-#include <geometry_msgs/Quaternion.h>
+#include <geometry_msgs/QuaternionStamped.h>
 #include <geometry_msgs/Vector3Stamped.h>
+#include <geometry_msgs/PointStamped.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/NavSatFix.h>
 #include <sensor_msgs/Joy.h>

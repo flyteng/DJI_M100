@@ -1,27 +1,43 @@
-#ifndef PROJECT_DEMO_LOCAL_POSITION_CONTROL_H
-#define PROJECT_DEMO_LOCAL_POSITION_CONTROL_H
+#ifndef LOCAL_POSITION_CONTROL_H
+#define LOCAL_POSITION_CONTROL_H
 
-#endif //PROJECT_DEMO_LOCAL_POSITION_CONTROL_H
-
-#include <dji_sdk/SetLocalPosRef.h>
+// ROS
 #include <ros/ros.h>
-#include <geometry_msgs/PointStamped.h>
+
+// Standard messages
 #include <std_msgs/UInt8.h>
 #include <sensor_msgs/Joy.h>
 #include <sensor_msgs/NavSatFix.h>
+#include <geometry_msgs/PointStamped.h>
 
-//DJI SDK includes
-#include <dji_sdk/DroneTaskControl.h>
-#include <dji_sdk/SDKControlAuthority.h>
+//DJI OSDK services
 #include <dji_sdk/QueryDroneVersion.h>
+#include <dji_sdk/SetLocalPosRef.h>
+#include <dji_sdk/SDKControlAuthority.h>
+#include <dji_sdk/DroneTaskControl.h>
 
+// Initialize drone (setup, obtain control, take off)
+bool is_M100();
 bool set_local_position();
+bool obtain_control(bool b);
+bool takeoff_land(int task);
+bool monitored_takeoff();
 
+// Messages callbacks
+void flight_status_callback(const std_msgs::UInt8::ConstPtr& msg);
+void display_mode_callback(const std_msgs::UInt8::ConstPtr& msg);
+void gps_position_callback(const sensor_msgs::NavSatFix::ConstPtr& msg);
+void gps_health_callback(const std_msgs::UInt8::ConstPtr& msg);
+void local_position_callback(const geometry_msgs::PointStamped::ConstPtr& msg);
+
+// Control function
+void local_position_ctrl(double &xCmd, double &yCmd, double &zCmd);
+
+// ***************************************
 float target_offset_x;
 float target_offset_y;
 float target_offset_z;
 float target_yaw;
-int target_set_state = 0;
 
 void setTarget(float x, float y, float z, float yaw)
 {
@@ -31,23 +47,4 @@ void setTarget(float x, float y, float z, float yaw)
   target_yaw      = yaw;
 }
 
-void local_position_callback(const geometry_msgs::PointStamped::ConstPtr& msg);
-
-void display_mode_callback(const std_msgs::UInt8::ConstPtr& msg);
-
-void flight_status_callback(const std_msgs::UInt8::ConstPtr& msg);
-
-void gps_position_callback(const sensor_msgs::NavSatFix::ConstPtr& msg);
-
-void gps_health_callback(const std_msgs::UInt8::ConstPtr& msg);
-
-bool takeoff_land(int task);
-
-bool obtain_control();
-
-bool M100monitoredTakeoff();
-
-void local_position_ctrl(double &xCmd, double &yCmd, double &zCmd);
-
-
-
+#endif //LOCAL_POSITION_CONTROL_H

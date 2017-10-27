@@ -1,4 +1,4 @@
-import dji_sdk
+#import dji_sdk
 import rospy
 from std_msgs.msg import UInt8, Float32
 from sensor_msgs.msg import Imu, NavSatFix, Joy, TimeReference, BatteryState
